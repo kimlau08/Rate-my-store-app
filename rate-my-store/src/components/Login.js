@@ -16,7 +16,6 @@ export default class Login extends Component {
             password: "",
 
             customers: {},
-            isLoading: false,
             redirectToHome: false
         }
 
@@ -26,32 +25,12 @@ export default class Login extends Component {
         this.handleNameChange=this.handleNameChange.bind(this);
         this.handleEmailChange=this.handleEmailChange.bind(this);
         this.handlePasswordChange=this.handlePasswordChange.bind(this);
+        this.authenticateUser=this.authenticateUser.bind(this);
         this.authResultReady=this.authResultReady.bind(this);
     }
 
-// sleep(msec) {
-//     const startTime = Date.now();
-//     let newTime;
-//     do {
-//         newTime = Date.now();
-//     } while (newTime - startTime < msec);
-// }
-// checkAuthResult() {
-
-//     //poll auth result for 10 times in 10 seconds. 
-//     for (let i=0; i<10; i++) {
-
-//         this.sleep(1000);
-
-//         authResult = this.props.location.getAuthResultCallback();
-//         if (authResult === "pass" || authResult === "fail" ) {
-//             return authResult;
-//         }
-//     }
-// }
     authResultReady(authResult) {
 
-let a=0;
         switch (authResult) {
 
             case "pass":
@@ -70,10 +49,32 @@ let a=0;
 
             default: 
                 console.log(`Error authenticating customer with email: ${this.state.email}`);
-                document.getElementById(authResultMsgId).innerHTML = "Error during login";
+                document.getElementById(authResultMsgId).innerHTML = "Incorrect email or password";
         }
 
     }
+
+
+    async authenticateUser(email, password, authResultReady) {
+
+        this.state.authResult = "in_progress"; 
+    
+        try {
+          const response=await axios.get(`http://localhost:8888/rms_api/v1/customers/${email}`);
+          console.log("getHTTP response:", response.data);
+          
+          let authResult = ( password === response.data.password ? "pass" : "fail" )
+          this.setState( {customers : response.data} );
+    
+          authResultReady(authResult);
+    
+        } catch (e) {
+          console.error(e);
+          authResultReady(authResult);
+        }
+      }
+    
+
     handleLogin(event) {
 
         if (this.state.email === "" || this.state.password === "") {
@@ -84,7 +85,7 @@ let a=0;
 
         event.preventDefault();
 
-        this.props.location.authenticateUserCallback(this.state.email, this.state.password, this.authResultReady );
+        this.authenticateUser(this.state.email, this.state.password, this.authResultReady );
     }
     handleCancel(event) {
         this.closeForm();  //redirect to home
@@ -116,6 +117,12 @@ let a=0;
     
         if (this.props.location.swapDisplayCallback !== undefined) { 
             this.props.location.swapDisplayCallback(toContainerId, this.props);
+        } else {
+            return (<div>
+                
+                 <Redirect to='/Home' />    //route back to root (App component) depending on state
+
+                </div>)
         }
     
         return (  //display already rendered in App.js

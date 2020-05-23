@@ -22,8 +22,7 @@ export default class App extends Component {
 
     }
 
-    this.authenticateUser=this.authenticateUser.bind(this);
-    this.getAuthResult=this.getAuthResult.bind(this);
+// this.authenticateUser=this.authenticateUser.bind(this);
     this.navBar=this.navBar.bind(this);
     this.swapContainerOnDisplay=this.swapContainerOnDisplay.bind(this);
   }
@@ -51,28 +50,24 @@ export default class App extends Component {
     }
   }
 
-  async authenticateUser(email, password, authResultReady) {
+// async authenticateUser(email, password, authResultReady) {
 
-    this.state.authResult = "in_progress"; 
+//   this.state.authResult = "in_progress"; 
 
-    try {
-      const response=await axios.get(`http://localhost:8888/rms_api/v1/customers/${email}`);
-      console.log("getHTTP response:", response.data);
-      
-      let authResult = ( password === response.data.password ? "pass" : "fail" )
-      this.setState( {authResult: authResult });
-      this.setState( {customer : response.data} );
+//   try {
+//     const response=await axios.get(`http://localhost:8888/rms_api/v1/customers/${email}`);
+//     console.log("getHTTP response:", response.data);
+    
+//     let authResult = ( password === response.data.password ? "pass" : "fail" )
+//     this.setState( {authResult: authResult });
+//     this.setState( {customer : response.data} );
 
-      authResultReady(authResult);
+//     authResultReady(authResult);
 
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  getAuthResult() {
-    return this.state.authResult;
-  }
+//   } catch (e) {
+//     console.error(e);
+//   }
+// }
 
   navBar() {
     return (
@@ -95,7 +90,6 @@ export default class App extends Component {
               <Link to={{
                       pathname: "/Login",
                       authenticateUserCallback: this.authenticateUser,
-    getAuthResultCallback : this.getAuthResult,
                       swapDisplayCallback: this.swapContainerOnDisplay,
                     }}>Login</Link>
               </li>
@@ -103,10 +97,6 @@ export default class App extends Component {
                   <Link to={{
                       pathname: "/Reviews",
                       swapDisplayCallback: this.swapContainerOnDisplay,
-  // getEventListCallback: this.getcalendarEventList,
-  // addEventCallback: this.addCalendarEvent,
-  // deleteEventCallback: this.deleteCalendarEvent,
-  // resetEventColorCallBack : this.resetEventColor
                     }}>Reviews</Link>
               </li>
           </ul>
@@ -129,16 +119,7 @@ export default class App extends Component {
 
         {this.navBar()}
 
-        <Router>
-          <Redirect to='/Home' />  
-        </Router>
-
-        <div id="home-container">
-
-
-
-
-        </div>
+        {Home}
         
       
       </div>
