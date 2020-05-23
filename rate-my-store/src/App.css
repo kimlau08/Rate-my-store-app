@@ -1,0 +1,112 @@
+html { 
+  background-color: rgb(177, 156, 102);
+  background-size: cover;
+}
+
+.App {
+  text-align: center;
+}
+
+ul {
+  list-style-type:none;
+}
+a:link {
+  text-decoration: none;
+}
+a:active {
+  font-size: 20px;
+  color: white;
+}
+
+
+/*************App.js***********/
+
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: gold;
+}
+  .menu-bar {
+    width: 400px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  
+/*************Login.js***********/
+
+.login-title {
+  color: white;
+  font-size: 28px;
+
+  margin: 50px 0 100px auto;
+}
+
+.login-form {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+  .input-container {
+    width: 100%;
+    height: 300px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+
+  }
+
+  .text-input {
+    font-size: 18px;
+  }
+
+  .email-input-box {
+    grid-column: 2/3;
+    grid-row: 1;
+
+    font-size: 18px;
+
+  }
+  .password-input-box {
+    grid-column: 2/3;
+    grid-row: 2;
+    font-size: 18px;
+
+  }
+  #auth-result-msg-id {
+    grid-column: 2/3;
+    grid-row: 3;
+
+    font-size: 18px;
+
+    color : red;
+    height: 20px;
+  }
+
+  .button-row {
+    grid-column: 2/3;
+    grid-row: 4;
+
+    font-size: 14px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .form-button {
+    width: 100px;
+    height: 32px;
+    font-size: 18px;
+    border: solid 1px #545871;
+    border-radius: 5px
+  }
