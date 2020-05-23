@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
+import '../App.css';
 
 const authResultMsgId = "auth-result-msg-id";
 let authResult = "";

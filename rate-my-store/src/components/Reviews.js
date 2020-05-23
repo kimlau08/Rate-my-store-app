@@ -3,7 +3,9 @@ import {Route, Link, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
+import '../App.css';
 import Rewards from './Rewards';
+import SelectList from './SelectList';
 
 function routeToReward() {
     return (
@@ -31,16 +33,12 @@ export default class Reviews extends Component {
         super(props);
 
         this.state = {
-            stores: []
+            stores: [],
+            selectedStoreId: 1
         }
 
-        this.getStoreList=this.getStoreList.bind(this);
-        this.createStoreNameList=this.createStoreNameList.bind(this);
-    }
- 
-
-    createStoreNameList(storeList) {
-
+        this.getStores = this.getStores.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
     
     async getStores() {
@@ -51,8 +49,6 @@ export default class Reviews extends Component {
         
         this.setState( {stores : response.data} );
 
-        this.createStoreNameList(response.data);
-
         } catch (e) {
         console.error(e);
         }
@@ -61,6 +57,12 @@ export default class Reviews extends Component {
     componentDidMount() {
         this.getStores();
     }
+
+    handleSelect = (selectedValue) =>{
+        this.setState({ selectedStoreId: selectedValue  });
+
+        console.log(`selected store Id: ${selectedValue}`);
+      }
 
     render() {
 
@@ -71,7 +73,7 @@ export default class Reviews extends Component {
         } else {
             return (<div>
                 
-                 <Redirect to='/Home' />    //route back to root (App component) depending on state
+                    <Redirect to='/Home' />    //route back to root (App component) depending on state
         
                 </div>)
         }
@@ -79,14 +81,13 @@ export default class Reviews extends Component {
         return (  //display already rendered in App.js
             <div id={toContainerId}>
     
-                <h1>Welcome to the Reviews page</h1>
-    
+                <h1>Tell us about your experience at our stores</h1>
+
+                <SelectList className="store-select-list" itemList={this.state.stores} handleSelectCallback={this.handleSelect} />
+
                 {routeToReward()}
     
             </div>
         )
-
     }
-    
-
 }

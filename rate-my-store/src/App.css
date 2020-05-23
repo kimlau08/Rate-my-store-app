@@ -68,6 +68,9 @@ a:active {
 
   .text-input {
     font-size: 18px;
+    border-radius: 5px;
+    
+    background-color: lightgoldenrodyellow
   }
 
   .email-input-box {
@@ -75,7 +78,6 @@ a:active {
     grid-row: 1;
 
     font-size: 18px;
-
   }
   .password-input-box {
     grid-column: 2/3;
@@ -108,5 +110,30 @@ a:active {
     height: 32px;
     font-size: 18px;
     border: solid 1px #545871;
-    border-radius: 5px
+    border-radius: 5px;
+    background-color: lightgoldenrodyellow;
+  }
+
+
+/*************Review.js***********/
+
+.store-select-list {
+  width: 50px;
+  height: 30px;
+  font-size: 20px;
+
+  color: lightslategray
+}
+  
+/*************SelectList.js***********/
+
+
+  .select-item-list {
+    width: 300px;
+    height: 30px;
+    font-size: 20px;
+
+    border-radius: 5px;
+    background-color: lightgoldenrodyellow;
+    color: lightslategray
   }
