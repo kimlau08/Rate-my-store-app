@@ -21,7 +21,7 @@ export default class Login extends Component {
         }
 
         this.handleLogin=this.handleLogin.bind(this);
-        this.handleCancel=this.handleCancel.bind(this);
+// this.handleCancel=this.handleCancel.bind(this);
         this.closeForm=this.closeForm.bind(this);
         this.handleNameChange=this.handleNameChange.bind(this);
         this.handleEmailChange=this.handleEmailChange.bind(this);
@@ -88,9 +88,9 @@ export default class Login extends Component {
 
         this.authenticateUser(this.state.email, this.state.password, this.authResultReady );
     }
-    handleCancel(event) {
-        this.closeForm();  //redirect to home
-    }
+// handleCancel(event) {
+//     this.closeForm();  //redirect to home
+// }
 
     handleNameChange(event) {
         this.setState({name: event.target.value}); //update the value state when the field is changed
@@ -126,7 +126,7 @@ export default class Login extends Component {
                 </div>)
         }
     
-        return (  //display already rendered in App.js
+        return (  
             <div id={toContainerId}>
 
                 
@@ -134,7 +134,8 @@ export default class Login extends Component {
                     <Redirect to='/Home' />    //route back to root (App component) depending on state
                 }
 
-                <p className="login-title">Login. Give a review. and get a voucher</p>
+                <br /><br />
+                <h1>Login. Give a review. and get a voucher</h1><br /><br /><br />
 
                 <div className="input-container">
                     <label className="email-input-box">
@@ -150,7 +151,7 @@ export default class Login extends Component {
                     
                     <div className="button-row">
                         <button className="form-button" onClick={this.handleLogin} >Login</button>  
-                        <button className="form-button" onClick={this.handleCancel} >Cancel</button>  
+    {/* <button className="form-button" onClick={this.handleCancel} >Cancel</button>   */}
                     </div>
                 </div>
             </div>

@@ -18,6 +18,9 @@ a:active {
   color: white;
 }
 
+h1 {
+  color: white;
+}
 
 /*************App.js***********/
 
@@ -39,7 +42,6 @@ a:active {
     font-style: italic;
   }
 
-  
 /*************Login.js***********/
 
 .login-title {
@@ -78,11 +80,14 @@ a:active {
     grid-row: 1;
 
     font-size: 18px;
+    color: white;
   }
   .password-input-box {
     grid-column: 2/3;
     grid-row: 2;
+
     font-size: 18px;
+    color: white;
 
   }
   #auth-result-msg-id {
@@ -111,7 +116,7 @@ a:active {
     font-size: 18px;
     border: solid 1px #545871;
     border-radius: 5px;
-    background-color: lightgoldenrodyellow;
+    background-color: antiquewhite;
   }
 
 
@@ -124,7 +129,82 @@ a:active {
 
   color: lightslategray
 }
+
+.store-desc-box {
+  margin: 0 0 auto;
+  width: 100%;
+  font-size: 18px;
+
+  padding: 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+  .store-img {
+    width: 500px;
+    height: 400px;
+  }
+
+  .store-address {
+    width: 300px;
+    margin: 0;
+    padding-top: 80px;
+
+    color: white;
+  }
+    .address-txt {
+      margin: 0;
+      padding: 0;
+    }
   
+.review-form {
+  width: 100%;
+  margin-top: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: white;
+border: solid 1px greenyellow;
+}
+  .input-area {
+    width: 70%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+border: solid 1px pink;
+  }
+    .select-input-box {
+      width: 60%;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+
+border: solid 1px brown;
+    }
+      .score-selections {
+        background-color: antiquewhite;
+        
+        font-size: 16px;
+      }
+
+    .textAreaInput {
+      font-size: 16px;
+    }
+
+  .AddCommentButton {
+    font-size: 16px;
+
+    border-radius: 5px;
+    background-color: lightgoldenrodyellow;
+    color: lightslategray
+  }
+
 /*************SelectList.js***********/
 
 

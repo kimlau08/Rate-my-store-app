@@ -119,8 +119,7 @@ export default class App extends Component {
 
         {this.navBar()}
 
-        {Home}
-        
+
       
       </div>
     );
