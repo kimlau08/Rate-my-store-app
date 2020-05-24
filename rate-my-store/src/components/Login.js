@@ -37,6 +37,7 @@ export default class Login extends Component {
             case "pass":
 
                 console.log(`Successful authentication for email: ${this.state.email}`);
+                this.props.location.setCustomerCallback(this.state.customers);  //elevate customer object to App.js
                 this.closeForm();  //redirect to home
     
                 break;

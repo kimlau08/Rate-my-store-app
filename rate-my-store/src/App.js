@@ -22,10 +22,21 @@ export default class App extends Component {
 
     }
 
-// this.authenticateUser=this.authenticateUser.bind(this);
+    
+    this.getCustomer=this.getCustomer.bind(this);
+    this.setCustomer=this.setCustomer.bind(this);
+
     this.navBar=this.navBar.bind(this);
     this.swapContainerOnDisplay=this.swapContainerOnDisplay.bind(this);
   }
+
+  getCustomer() {
+    return this.state.customer;
+  }
+  setCustomer(customerObj) {
+    this.state.customer = customerObj;
+  }
+
 
   swapContainerOnDisplay(toContainerId, inputProps) {   
 
@@ -50,24 +61,6 @@ export default class App extends Component {
     }
   }
 
-// async authenticateUser(email, password, authResultReady) {
-
-//   this.state.authResult = "in_progress"; 
-
-//   try {
-//     const response=await axios.get(`http://localhost:8888/rms_api/v1/customers/${email}`);
-//     console.log("getHTTP response:", response.data);
-    
-//     let authResult = ( password === response.data.password ? "pass" : "fail" )
-//     this.setState( {authResult: authResult });
-//     this.setState( {customer : response.data} );
-
-//     authResultReady(authResult);
-
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
 
   navBar() {
     return (
@@ -89,14 +82,15 @@ export default class App extends Component {
               <li>
               <Link to={{
                       pathname: "/Login",
-                      authenticateUserCallback: this.authenticateUser,
                       swapDisplayCallback: this.swapContainerOnDisplay,
+                      setCustomerCallback: this.setCustomer
                     }}>Login</Link>
               </li>
               <li>
                   <Link to={{
                       pathname: "/Reviews",
                       swapDisplayCallback: this.swapContainerOnDisplay,
+                      getCustomerCallback: this.getCustomer
                     }}>Reviews</Link>
               </li>
           </ul>

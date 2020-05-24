@@ -168,7 +168,6 @@ h1 {
   align-items: center;
 
   color: white;
-border: solid 1px greenyellow;
 }
   .input-area {
     width: 70%;
@@ -176,7 +175,6 @@ border: solid 1px greenyellow;
     display: flex;
     flex-direction: column;
     justify-content: center;
-border: solid 1px pink;
   }
     .select-input-box {
       width: 60%;
@@ -185,7 +183,6 @@ border: solid 1px pink;
       flex-direction: row;
       justify-content: space-evenly;
 
-border: solid 1px brown;
     }
       .score-selections {
         background-color: antiquewhite;
@@ -204,6 +201,86 @@ border: solid 1px brown;
     background-color: lightgoldenrodyellow;
     color: lightslategray
   }
+
+.review-list {
+  width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-container {
+  width: 60%;
+  margin-top: 50px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+  .review-box {
+    width: 90%;
+    margin: 0;
+    padding:  0 30px 10px 30px;
+
+    border: solid 1px lightslategray;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: lightyellow;
+  }
+    
+  .button-row {
+    width: 100%;
+    margin-left: -25px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+  }
+    .buttomImg {
+      width: 20px;
+      height: 20px;
+      margin: 5px 3px 0 0;
+
+      border-radius: 50%;
+      background-color: whitesmoke;
+    }
+    .result-area {
+      margin-left: 10px;
+      color: red;
+    }
+
+  .review-info-row, .score-row {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    font-weight: bold;
+
+  }
+    .score {
+      margin: 0;
+      padding: 0;
+    }
+
+  .comment-txt {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    text-align: left;
+    font-weight: bold;
+  }
+
 
 /*************SelectList.js***********/
 

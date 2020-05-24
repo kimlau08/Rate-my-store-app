@@ -7,6 +7,9 @@ import '../App.css';
 import Rewards from './Rewards';
 import SelectList from './SelectList';
 
+import updateIcon from '../assets/update_icon.png';
+import deleteIcon from '../assets/delete_icon.png';
+
 function routeToReward() {
     return (
         <Router>
@@ -32,7 +35,13 @@ export default class Reviews extends Component {
         super(props);
 
         this.state = {
+
+            customer: {},
+
             stores: [],
+            customers: [],
+            storeReviews: [],
+            storeCustomers: [],
             selectedStoreId: 1,
 
             productScore: 5,
@@ -43,24 +52,30 @@ export default class Reviews extends Component {
         }
 
         this.getStores = this.getStores.bind(this);
+        this.getCustomers = this.getCustomers.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.getStoreObj = this.getStoreObj.bind(this);
         this.getStoreReviews = this.getStoreReviews.bind(this);
-
+        this.getReviewsByStore = this.getReviewsByStore.bind(this);
+        this.checkCustomerWriteAccess = this.checkCustomerWriteAccess.bind(this);
         this.displayReviewForm = this.displayReviewForm.bind(this);
+        this.displayStoreReviews = this.displayStoreReviews.bind(this);
 
         this.handleProductScoreChange = this.handleProductScoreChange.bind(this);
         this.handleServiceScoreChange = this.handleServiceScoreChange.bind(this);
         this.handleCleanScoreChange = this.handleCleanScoreChange.bind(this);
         this.handleOverallScoreChange = this.handleOverallScoreChange.bind(this);
         this.handleCommentChange = this.handleCommentChange.bind(this);
+
+        this.handleUpdateReview = this.handleUpdateReview.bind(this);
+        this.handleDeleteReview = this.handleDeleteReview.bind(this);
     }
     
     async getStores() {
 
         try {
         const response=await axios.get(`http://localhost:8888/rms_api/v1/stores`);
-        console.log("getHTTP response:", response.data);
+        console.log("get stores response:", response.data);
         
         this.setState( {stores : response.data} );
 
@@ -69,8 +84,35 @@ export default class Reviews extends Component {
         }
     }
 
+    async getCustomers() {
+
+        try {
+        const response=await axios.get(`http://localhost:8888/rms_api/v1/customers`);
+        console.log("get stores response:", response.data);
+        
+        this.setState( {customers : response.data} );
+
+        } catch (e) {
+        console.error(e);
+        }
+    }
+
+    async getReviewsByStore(store) {
+
+        try {
+        const response=await axios.get(`http://localhost:8888/rms_api/v1/reviewsbystore/${store}`);
+        console.log("get reviews by store response:", response.data);
+        
+        this.setState( {storeReviews : response.data} );
+
+        } catch (e) {
+        console.error(e);
+        }
+    }
+
     componentDidMount() {
         this.getStores();
+        this.getCustomers();
     }
 
     handleSelect = (selectedValue) =>{
@@ -78,6 +120,8 @@ export default class Reviews extends Component {
 
         console.log(`selected store Id: ${selectedValue}`);
 
+        //retrieve the reviews for the selected store
+        this.getStoreReviews(selectedValue);
     }
 
     getStoreObj(id) {
@@ -112,7 +156,101 @@ export default class Reviews extends Component {
             return;
         }
 
+        this.getReviewsByStore(this.state.selectedStoreId);
+    }
+
+    checkCustomerWriteAccess(reviewObj) {
+
+        //write/delete access is given to reviews created by customer
+        return ( this.state.customer.id === reviewObj.customer );
+
+    }
+
+
+    handleUpdateReview(event) {
+
+    }
+    handleDeleteReview(event) {
         
+        let reviewId = event.target.id;
+        let reviewList = this.state.storeReviews;
+        let customer = this.state.customer;
+
+        if (Object.keys(customer).length === 0 && customer.constructor === Object) {
+            //customer is not set. tell customer to login first
+            document.getElementById("update-result-area-"+reviewId).innerHTML = "Please login first." ;
+
+            return
+        }
+
+        let idx = this.state.storeReviews.findIndex( review => 
+                                review.id.toString() === reviewId.toString() );
+
+        if (idx >= 0) {
+            let reviewObj = this.state.storeReviews[idx];
+    
+            if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
+                //tell customer that the review can only be updated by the person created it.
+                document.getElementById("update-result-area-"+reviewId).innerHTML = "Reviews can only be updated by who created it." ;
+                
+                return;
+            }
+
+            reviewList.splice(idx, 1)
+            this.setState( { storeReviews : reviewList } );
+        } 
+    }
+
+    getCustomerName(customerId) {
+        
+        let idx = this.state.customers.findIndex( c => c.id.toString() === customerId.toString() )
+        return idx >= 0 ? this.state.customers[idx].name : "" ;
+
+    }
+
+    displayReview(review) {
+
+        let reviewId=review.id;
+        let customerId = review.customer;
+
+        return (
+                <div className="review-container" key={reviewId}>
+                    
+                    <div className="review-box" >
+                        
+                        <div className="button-row">
+                            <img className="buttomImg" id={reviewId} src={updateIcon} onClick={this.handleUpdateReview} />
+                            <img className="buttomImg" id={reviewId} src={deleteIcon} onClick={this.handleDeleteReview} />
+
+                            <p className="result-area" id={"update-result-area-"+reviewId}></p>
+                        </div>
+
+                        <div className="review-info-row">
+                            <p>Name: {this.getCustomerName(customerId)}    Date: ______  </p>
+                        </div>
+
+                        <div className="score-row">
+                            <p className="score" id={"prod-score-"+reviewId}>Product score: {review.product}</p>
+                            <p className="score" id={"serv-score-"+reviewId}>Service score: {review.service}</p>
+                            <p className="score" id={"clean-score-"+reviewId}>Cleanliness score: {review.cleanliness}</p>
+                            <p className="score" id={"overall-score-"+reviewId}>Overall score: {review.overall}</p>
+                        </div>
+
+                        <p className="comment-txt" id={"comment-"+reviewId}>{review.comment}</p>
+
+                    </div>
+                </div>
+        )
+    }
+
+    displayStoreReviews() {
+
+        return (
+            <div className="review-list">
+                {this.state.storeReviews.map(review => this.displayReview(review))}
+            </div>
+        )
+
     }
 
     handleProductScoreChange(event) {
@@ -233,6 +371,8 @@ export default class Reviews extends Component {
         
                 </div>)
         }
+
+        this.state.customer = this.props.location.getCustomerCallback();
         
         return (  
             <div id={toContainerId}>
@@ -244,9 +384,9 @@ export default class Reviews extends Component {
 
                 {this.displayStoreInfo(this.state.selectedStoreId)}
                 {this.displayReviewForm()}
-                {this.getStoreReviews()}
 
                 {routeToReward()}
+                {this.displayStoreReviews()}
     
             </div>
         )
