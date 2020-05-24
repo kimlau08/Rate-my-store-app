@@ -53,10 +53,12 @@ export default class Reviews extends Component {
 
         this.getStores = this.getStores.bind(this);
         this.getCustomers = this.getCustomers.bind(this);
+        this.getReviewsByStore = this.getReviewsByStore.bind(this);
+        this.deleteReviewById = this.deleteReviewById.bind(this);
+
         this.handleSelect = this.handleSelect.bind(this);
         this.getStoreObj = this.getStoreObj.bind(this);
         this.getStoreReviews = this.getStoreReviews.bind(this);
-        this.getReviewsByStore = this.getReviewsByStore.bind(this);
         this.checkCustomerWriteAccess = this.checkCustomerWriteAccess.bind(this);
         this.displayReviewForm = this.displayReviewForm.bind(this);
         this.displayStoreReviews = this.displayStoreReviews.bind(this);
@@ -108,6 +110,18 @@ export default class Reviews extends Component {
         } catch (e) {
         console.error(e);
         }
+    }
+
+    async deleteReviewById (reviewId) {
+        
+        try {
+            const response=await axios.delete(`http://localhost:8888/rms_api/v1/reviews/${reviewId}`);
+            console.log("delete review by id response:", response);
+    
+            } catch (e) {
+            console.error(e);
+            }
+
     }
 
     componentDidMount() {
@@ -212,6 +226,10 @@ export default class Reviews extends Component {
                 return;  //customer does cannot update the review item
             }
 
+            //delete review from database
+            this.deleteReviewById(reviewId);
+
+            //delete review locally for refreshing display
             reviewList.splice(idx, 1)
             this.setState( { storeReviews : reviewList } );
         } 

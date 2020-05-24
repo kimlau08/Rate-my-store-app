@@ -18,6 +18,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+
+  "proxy": "http://localhost:8888//rms_api/v1/reviews",
+
+  
   "eslintConfig": {
     "extends": "react-app"
   },
