@@ -159,11 +159,33 @@ export default class Reviews extends Component {
         this.getReviewsByStore(this.state.selectedStoreId);
     }
 
+    checkCustomerLogin(reviewId) {
+
+        let customer = this.state.customer;
+
+        if (Object.keys(customer).length === 0 && customer.constructor === Object) {
+            //customer is not set. tell customer to login first
+            document.getElementById("update-result-area-"+reviewId).innerHTML = "Please login first." ;
+
+            return false;
+        }
+
+        return true;
+    }
+
     checkCustomerWriteAccess(reviewObj) {
 
         //write/delete access is given to reviews created by customer
-        return ( this.state.customer.id === reviewObj.customer );
+        if ( this.state.customer.id !== reviewObj.customer ) {
 
+            //tell customer that the review can only be updated by the person created it.
+            document.getElementById("update-result-area-"+reviewObj.id).innerHTML = "Reviews can only be updated by who created it." ;
+    
+            return false;
+    
+        } 
+        
+        return true;
     }
 
 
@@ -174,13 +196,9 @@ export default class Reviews extends Component {
         
         let reviewId = event.target.id;
         let reviewList = this.state.storeReviews;
-        let customer = this.state.customer;
 
-        if (Object.keys(customer).length === 0 && customer.constructor === Object) {
-            //customer is not set. tell customer to login first
-            document.getElementById("update-result-area-"+reviewId).innerHTML = "Please login first." ;
-
-            return
+        if (! this.checkCustomerLogin(reviewId) ) {
+            return  //customer is not logged in
         }
 
         let idx = this.state.storeReviews.findIndex( review => 
@@ -190,10 +208,8 @@ export default class Reviews extends Component {
             let reviewObj = this.state.storeReviews[idx];
     
             if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
-                //tell customer that the review can only be updated by the person created it.
-                document.getElementById("update-result-area-"+reviewId).innerHTML = "Reviews can only be updated by who created it." ;
-                
-                return;
+
+                return;  //customer does cannot update the review item
             }
 
             reviewList.splice(idx, 1)

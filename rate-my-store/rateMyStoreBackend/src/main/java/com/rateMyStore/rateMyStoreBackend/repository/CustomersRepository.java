@@ -9,5 +9,7 @@ import com.rateMyStore.rateMyStoreBackend.model.Customers;
 
 @Repository
 public interface CustomersRepository extends JpaRepository<Customers, Long>{
+	
 	Optional<Customers> findByEmail(String email);
+
 }

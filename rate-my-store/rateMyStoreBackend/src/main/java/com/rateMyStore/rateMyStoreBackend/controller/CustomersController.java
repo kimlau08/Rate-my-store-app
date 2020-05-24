@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rateMyStore.rateMyStoreBackend.exception.ResourceNotFoundException;
 import com.rateMyStore.rateMyStoreBackend.model.Customers;
+import com.rateMyStore.rateMyStoreBackend.model.Reviews;
 import com.rateMyStore.rateMyStoreBackend.repository.CustomersRepository;
 
 
@@ -42,8 +43,9 @@ public class CustomersController {
 	  return this.customersRepository.findAll();
 	  
 	  }
-
-  //get all customers by name
+	  
+	  
+  //get a customer by email
 
 	@GetMapping("/customers/{email}")
 	public ResponseEntity<Customers> getCustomersByEmail(@PathVariable(value = "email") String email)
