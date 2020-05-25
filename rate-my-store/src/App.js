@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 import {Route, Link, Switch, BrowserRouter as Router } from 'react-router-dom';
-import { Redirect } from 'react-router-dom';
+import RouterCarousel from 'react-router-carousel';
 
 import Home from './components/Home';
 import Login from './components/Login';
 import Reviews from './components/Reviews';
 
-let authResult = false;
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -73,12 +72,6 @@ export default class App extends Component {
                       swapDisplayCallback: this.swapContainerOnDisplay,
                     }}>Home</Link>
               </li>
-  {/* <li>
-  <Link to={{
-          pathname: "/Our stores",
-          swapDisplayCallback: this.swapContainerOnDisplay,
-        }}>Stores</Link>
-  </li>  */}
               <li>
               <Link to={{
                       pathname: "/Login",

@@ -25,6 +25,9 @@ export default function Rewards(props) {
     
     let toContainerId="rewards-container";
 
+    if (! props.location.checkRewardStatusCallback()) {
+        return <div></div>
+    }
     return (  //display already rendered in App.js
         <div id={toContainerId}>
 

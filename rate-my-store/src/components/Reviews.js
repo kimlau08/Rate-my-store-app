@@ -75,6 +75,7 @@ export default class Reviews extends Component {
 
         this.addNewReview = this.addNewReview.bind(this);
         this.routeToReward = this.routeToReward.bind(this);
+        this.checkRewardStatus = this.checkRewardStatus.bind(this);
     }
     
     async getStores() {
@@ -170,6 +171,7 @@ export default class Reviews extends Component {
                     <li>
                     <Link to={{
                             pathname: "/Rewards",
+                            checkRewardStatusCallback: this.checkRewardStatus
                             }}>Click here to get a $5 voucher barcode</Link>
                     </li>
                 </ul>
@@ -181,9 +183,15 @@ export default class Reviews extends Component {
             </Router>
         )
     }
+
+    checkRewardStatus() {
+        return this.state.rewardEnabled;
+    }
+
     showMsgInAddArea(Message) {
         document.getElementById(AddResultAreaId).innerHTML = Message;
     }
+
     clearSelectedReview() {
         //de-select review item by resetting to default
         this.setState(  {selectedReviewId: defaultReviewId} );
@@ -191,6 +199,7 @@ export default class Reviews extends Component {
         //clear any review item update message in review form area.
         this.showMsgInAddArea("");
     }
+    
     resetAddReviewArea() {
         
         //clear any review item update message in review form area.
@@ -202,12 +211,19 @@ export default class Reviews extends Component {
      
 
     handleSelect(selectedValue) {
+
+        if (selectedValue !== this.state.selectedStoreId) {            
+            //disable the reward when changing the store selected
+            this.setState( { rewardEnabled : false});
+        }
+
         this.setState({ selectedStoreId: selectedValue  });
 
         console.log(`selected store Id: ${selectedValue}`);
 
         //retrieve the reviews for the selected store
         this.getStoreReviews(selectedValue);
+
     }
 
     getStoreObj(id) {
@@ -581,10 +597,7 @@ export default class Reviews extends Component {
                 </label>
                 
                 <div className="form-button-row">
-    {/* <input type="submit" id="add-review-button" value="Add Review" className="review-button" onClick={AddReviewClicked} />
-    <input type="submit" id="update-review-button" value="Update Review" className="review-button" onClick={updateReviewClicked} /> */}
                     <button type="submit" id="add-review-button" className="review-button">Add Review</button>
-    {/* <button type="submit"  id="update-review-button" className="review-button">Update Review</button> */}
                 </div>
             </form>
         )
