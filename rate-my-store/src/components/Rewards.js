@@ -25,16 +25,6 @@ export default function Rewards(props) {
     
     let toContainerId="rewards-container";
 
-// if (this.props.location.swapDisplayCallback !== undefined) { 
-//     this.props.location.swapDisplayCallback(toContainerId, this.props);
-// } else {
-//     return (<div>
-        
-//             <Redirect to='/Home' />    //route back to root (App component) depending on state
-
-//         </div>)
-// }
-
     return (  //display already rendered in App.js
         <div id={toContainerId}>
 

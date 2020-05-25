@@ -18,26 +18,7 @@ const defaultReviewBoxStyle = {
     border: '1px solid',
     borderColor: 'orange'
 }
-
-function routeToReward() {
-    return (
-        <Router>
-            <nav className="menu">
-            <ul className="menu-bar">
-                <li>
-                <Link to={{
-                        pathname: "/Rewards",
-                        }}>Click here to get a $5 voucher barcode</Link>
-                </li>
-            </ul>
-            </nav>
-            <Switch>
-                <Route exact path="/Rewards" component={Rewards} />
-            </Switch>
-
-        </Router>
-    )
-}
+let uniqueReviewId = 100;
 
 export default class Reviews extends Component { 
     constructor(props) {
@@ -54,7 +35,7 @@ export default class Reviews extends Component {
             selectedStoreId: defaultStoreId,
             selectedReviewId: defaultReviewId,
 
-            reviewBoxColor: defaultReviewBoxStyle,
+            rewardEnabled: false,
 
             productScore: 5,
             serviceScore: 5,
@@ -93,6 +74,7 @@ export default class Reviews extends Component {
         this.handleReview = this.handleReview.bind(this);
 
         this.addNewReview = this.addNewReview.bind(this);
+        this.routeToReward = this.routeToReward.bind(this);
     }
     
     async getStores() {
@@ -175,7 +157,30 @@ export default class Reviews extends Component {
         this.getCustomers();
     }
 
-    
+    routeToReward() {
+
+        if (!this.state.rewardEnabled) {
+            return <div></div>; 
+        }
+
+        return (
+            <Router>
+                <nav className="menu">
+                <ul className="menu-bar">
+                    <li>
+                    <Link to={{
+                            pathname: "/Rewards",
+                            }}>Click here to get a $5 voucher barcode</Link>
+                    </li>
+                </ul>
+                </nav>
+                <Switch>
+                    <Route exact path="/Rewards" component={Rewards} />
+                </Switch>
+
+            </Router>
+        )
+    }
     showMsgInAddArea(Message) {
         document.getElementById(AddResultAreaId).innerHTML = Message;
     }
@@ -194,6 +199,7 @@ export default class Reviews extends Component {
         //clear add review area
         this.clearReviewForm();
     }
+     
 
     handleSelect(selectedValue) {
         this.setState({ selectedStoreId: selectedValue  });
@@ -409,7 +415,7 @@ export default class Reviews extends Component {
                         </div>
 
                         <div className="review-info-row">
-                            <p>Name: {this.getCustomerName(customerId)}    Date: ______  </p>
+                            <p>Name: {this.getCustomerName(customerId)}  </p>
                         </div>
 
                         <div className="score-row">
@@ -435,9 +441,23 @@ export default class Reviews extends Component {
         )
     }
 
+    getNewId(reviewObj) {
+        let keyValue = { id: ++uniqueReviewId } ;
+        Object.assign(reviewObj, keyValue);
+        return reviewObj;
+    }
     addNewReview(reviewObj) {
 
-        
+        let reviewList = this.state.storeReviews;
+        reviewObj = this.getNewId(reviewObj);
+
+        //add new review to local list
+        reviewList.push(reviewObj);
+        this.setState(  {storeReviews: reviewList } );
+
+        //enable reward after adding new review
+        this.setState( { rewardEnabled : true});
+
     }
 
     handleProductScoreChange(event) {
@@ -491,7 +511,7 @@ export default class Reviews extends Component {
         if (this.state.selectedReviewId === defaultReviewId) {
 
             //no review has been selected. Proceed to add review
-            this.addNewReview(event);
+            this.addNewReview(reviewObj);
             return;
         }
         
@@ -600,7 +620,7 @@ export default class Reviews extends Component {
 
                 {this.displayReviewForm()}
 
-                {routeToReward()}
+                {this.routeToReward()}
 
                 {this.displayStoreReviews()}
     

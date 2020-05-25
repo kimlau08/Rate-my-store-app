@@ -162,6 +162,7 @@ h1 {
 .review-form {
   width: 100%;
   margin-top: 50px;
+  margin-bottom: 50px;
 
   display: flex;
   flex-direction: column;
@@ -170,7 +171,7 @@ h1 {
   color: white;
 }
   #add-result-area {
-    
+    height: 18px;
     margin-left: 12px;
     color: red;
   }
@@ -297,7 +298,7 @@ h1 {
 
 
   .select-item-list {
-    width: 300px;
+    width: 400px;
     height: 30px;
     font-size: 20px;
 
