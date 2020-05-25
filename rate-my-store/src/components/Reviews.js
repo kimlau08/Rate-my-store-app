@@ -55,6 +55,7 @@ export default class Reviews extends Component {
         this.getCustomers = this.getCustomers.bind(this);
         this.getReviewsByStore = this.getReviewsByStore.bind(this);
         this.deleteReviewById = this.deleteReviewById.bind(this);
+        this.updateReviewById = this.updateReviewById.bind(this);
 
         this.handleSelect = this.handleSelect.bind(this);
         this.getStoreObj = this.getStoreObj.bind(this);
@@ -62,6 +63,7 @@ export default class Reviews extends Component {
         this.checkCustomerWriteAccess = this.checkCustomerWriteAccess.bind(this);
         this.displayReviewForm = this.displayReviewForm.bind(this);
         this.displayStoreReviews = this.displayStoreReviews.bind(this);
+        this.fillReviewForm = this.fillReviewForm.bind(this);
 
         this.handleProductScoreChange = this.handleProductScoreChange.bind(this);
         this.handleServiceScoreChange = this.handleServiceScoreChange.bind(this);
@@ -115,12 +117,23 @@ export default class Reviews extends Component {
     async deleteReviewById (reviewId) {
         
         try {
-            const response=await axios.delete(`http://localhost:8888/rms_api/v1/reviews/${reviewId}`);
-            console.log("delete review by id response:", response);
-    
-            } catch (e) {
-            console.error(e);
-            }
+        const response=await axios.delete(`http://localhost:8888/rms_api/v1/reviews/${reviewId}`);
+        console.log("delete review by id response:", response.data);
+
+        } catch (e) {
+        console.error(e);
+        }
+    }
+
+    async updateReviewById (reviewObj) {
+        
+        // try {
+        // const response=await axios.delete(`http://localhost:8888/rms_api/v1/reviews/${reviewId}`);
+        // console.log("delete review by id response:", response.data);
+
+        // } catch (e) {
+        // console.error(e);
+        // }
 
     }
 
@@ -202,9 +215,54 @@ export default class Reviews extends Component {
         return true;
     }
 
+    fillReviewForm(reviewObj) {
+
+        let reviewId = reviewObj.id;
+
+        document.getElementById("prod-score").value   = reviewObj.product;
+        document.getElementById("serv-score").value   = reviewObj.service;
+        document.getElementById("clean-score").value  = reviewObj.cleanliness;
+        document.getElementById("general-score").value= reviewObj.overall;
+        document.getElementById("comment-area").value = reviewObj.comment;
+
+        this.setState ( {
+            productScore: reviewObj.product,
+            serviceScore: reviewObj.service,
+            cleanScore:   reviewObj.cleanliness,
+            overallScore: reviewObj.overall,
+            comment:      reviewObj.comment
+        } );
+
+    }
 
     handleUpdateReview(event) {
+        
+        let reviewId = event.target.id;
+        let reviewList = this.state.storeReviews;
 
+                    // if (! this.checkCustomerLogin(reviewId) ) {
+                    //     return  //customer is not logged in
+                    // }
+
+        let idx = this.state.storeReviews.findIndex( review => 
+                                review.id.toString() === reviewId.toString() );
+
+        if (idx >= 0) {
+            let reviewObj = this.state.storeReviews[idx];
+    
+                    // if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
+
+                    //     return;  //customer does cannot update the review item
+                    // }
+
+
+console.log(reviewObj);
+            this.fillReviewForm(reviewObj);
+
+
+
+
+        }
     }
     handleDeleteReview(event) {
         
@@ -309,28 +367,29 @@ export default class Reviews extends Component {
             return;
         }
 
-        // let reviewObj={};
-        // for (let i=0; i<event.target.elements.length; i++) {
-        //     let elem=event.target.elements[i];
-        //     if (elem.type !== "text" && elem.type !== "textarea") {
-        //         continue;
-        //     }
+        event.preventDefault();
 
-        //     let keyValue={ [elem.name]: elem.value  }
-        //     //merge key:value pair to wineObj
-        //     Object.assign(wineObj, keyValue);
+        //collect form field value in reviewObj
+        let reviewObj={};
+        for (let i=0; i<event.target.elements.length; i++) {
+            let elem=event.target.elements[i];
+            if (elem.type !== "select-one" && elem.type !== "textarea") {
+                continue;
+            }
 
-        // }
+            let keyValue= elem.type === "select-one" ? { [elem.name]: parseInt(elem.value) }   : 
+                                                       { [elem.name]: elem.value } ;
+            //merge key:value pair to wineObj
+            Object.assign(reviewObj, keyValue);
 
-        // event.preventDefault();
+        }
 
-        // let wineStr=JSON.stringify(wineObj)
-        // if (window.confirm("Creating new wine in product catalog")) {
-        //     this.props.location.createWineCallBack(wineStr);
-        // } 
+        //add customer id and store id to reviewObj
+        let reviewInfo={ customer: this.state.customer.id,
+                         store: this.state.selectedStoreId};
 
-        // //Redirect back to root (App component)
-        // this.setState( { redirectToWineLst: true } ); 
+        Object.assign(reviewObj, reviewInfo);
+
 
     }
 
@@ -338,19 +397,19 @@ export default class Reviews extends Component {
         return (
             <form className="review-form" onSubmit={this.handleReview}>
                 <div className="select-input-box">
-                    <label className="product-score" name="product_rating" >
+                    <label className="product-score" >
                         Product score<br />
-                        <select className="score-selections" onChange={this.handleProductScoreChange}>
-                            <option value="5">5-Superb</option>
+                        <select className="score-selections" id="prod-score" name="product" onChange={this.handleProductScoreChange}>
+                            <option value='5'>5-Superb</option>
                             <option value="4">4-Exceed expectation</option>
                             <option value="3">3-Met Expetation</option>
                             <option value="2">2-Below Average</option>
                             <option value="1">1-Poor</option>
                         </select>
                     </label>
-                    <label className="service-score" name="service_rating" onChange={this.handleServiceScoreChange}>
+                    <label className="service-score" name="service_rating" >
                         Service score<br />
-                        <select className="score-selections">
+                        <select className="score-selections" id="serv-score" name="service" onChange={this.handleServiceScoreChange}>
                             <option value="5">5-Superb</option>
                             <option value="4">4-Exceed expectation</option>
                             <option value="3">3-Met Expetation</option>
@@ -358,9 +417,9 @@ export default class Reviews extends Component {
                             <option value="1">1-Poor</option>
                         </select>
                     </label>
-                    <label className="cleanliness-score" name="cleanliness_rating" onChange={this.handleCleanScoreChange}>
+                    <label className="cleanliness-score" name="cleanliness_rating" >
                         Cleanliness score<br />
-                        <select className="score-selections">
+                        <select className="score-selections" id="clean-score" name="cleanliness" onChange={this.handleCleanScoreChange}>
                             <option value="5">5-Superb</option>
                             <option value="4">4-Exceed expectation</option>
                             <option value="3">3-Met Expetation</option>
@@ -368,9 +427,9 @@ export default class Reviews extends Component {
                             <option value="1">1-Poor</option>
                         </select>
                     </label>
-                    <label className="overall-score" name="overall_rating" onChange={this.handleOverallScoreChange}>
+                    <label className="overall-score" name="overall_rating" >
                         Overall score<br />
-                        <select className="score-selections">
+                        <select className="score-selections" id="general-score" name="overall" onChange={this.handleOverallScoreChange}>
                             <option value="5">5-Superb</option>
                             <option value="4">4-Exceed expectation</option>
                             <option value="3">3-Met Expetation</option>
@@ -380,9 +439,9 @@ export default class Reviews extends Component {
                     </label>
                 </div><br />
 
-                <label className="comment-box">
+                <label className="comment-box" name="comment">
                     Comment<br />
-                    <textarea className="textAreaInput" name="comment" rows="3" cols="80"  placeholder="add comment here" onChange={this.handleCommentChange} /><br />
+                    <textarea className="textAreaInput" id="comment-area" name="comment" rows="3" cols="80"  placeholder="add comment here" onChange={this.handleCommentChange} /><br />
                 </label>
                 
                 <button type="submit" className="AddCommentButton">Add Comment</button>
