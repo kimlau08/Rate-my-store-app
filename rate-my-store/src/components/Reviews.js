@@ -107,7 +107,7 @@ export default class Reviews extends Component {
     async getReviewsByStore(store) {
 
         try {
-        const response=await axios.get(`http://localhost:8888/rms_api/v1/reviewsbystore/${store}`);
+        const response=await axios.get(`http://localhost:8888/rms_api/v1/reviews/${store}`);
         console.log("get reviews by store response:", response.data);
         
         this.setState( {storeReviews : response.data} );
@@ -409,7 +409,7 @@ export default class Reviews extends Component {
                              store: parseInt(this.state.selectedStoreId)};
     
             Object.assign(reviewObj, reviewInfo);
-                
+
             //update backend database
             this.updateReviewById(reviewObj);
 
