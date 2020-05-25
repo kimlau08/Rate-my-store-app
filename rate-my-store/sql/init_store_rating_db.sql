@@ -18,7 +18,7 @@ INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall
 INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (2, 1, 2, 4, 2, 4, 4, 'Great food. Pricey');
 INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (3, 2, 3, 3, 3, 3, 3, 'Average food. Average service');
 INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (4, 2, 4, 2, 4, 2, 2, 'New menu not so good. Pricey');
-INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (5, 3, 5, 1, 5, 1, 1, 'Most dishes sold out early. Shady location');
+INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (5, 3, 5, 1, 5, 1, 1, 'Most menu items sold out early. Shady location');
 INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (6, 3, 1, 5, 1, 5, 5, 'People got to try their specialty dishes');
 INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (7, 4, 2, 4, 2, 4, 4, 'Good menu. Crowded place');
 INSERT INTO reviews (id, customer, store, product, service, cleanliness, overall, comment) VALUES (8, 4, 3, 3, 3, 3, 3, 'Small store. Big taste');
