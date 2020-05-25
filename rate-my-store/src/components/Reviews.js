@@ -43,6 +43,7 @@ export default class Reviews extends Component {
             storeReviews: [],
             storeCustomers: [],
             selectedStoreId: 1,
+            selectedReviewId: 1,
 
             productScore: 5,
             serviceScore: 5,
@@ -63,7 +64,8 @@ export default class Reviews extends Component {
         this.checkCustomerWriteAccess = this.checkCustomerWriteAccess.bind(this);
         this.displayReviewForm = this.displayReviewForm.bind(this);
         this.displayStoreReviews = this.displayStoreReviews.bind(this);
-        this.fillReviewForm = this.fillReviewForm.bind(this);
+        this.fillReviewForm = this.fillReviewForm.bind(this);  //pre-load input form area with contents to be updated
+        this.fillReviewListItem = this.fillReviewListItem.bind(this); //update the selected item in review list after backend is successfully updated.
 
         this.handleProductScoreChange = this.handleProductScoreChange.bind(this);
         this.handleServiceScoreChange = this.handleServiceScoreChange.bind(this);
@@ -73,6 +75,7 @@ export default class Reviews extends Component {
 
         this.handleUpdateReview = this.handleUpdateReview.bind(this);
         this.handleDeleteReview = this.handleDeleteReview.bind(this);
+        this.handleReview = this.handleReview.bind(this);
     }
     
     async getStores() {
@@ -127,14 +130,16 @@ export default class Reviews extends Component {
 
     async updateReviewById (reviewObj) {
         
-        // try {
-        // const response=await axios.delete(`http://localhost:8888/rms_api/v1/reviews/${reviewId}`);
-        // console.log("delete review by id response:", response.data);
+        try {
+            const response=await axios.put(`http://localhost:8888/rms_api/v1/reviews/${this.state.selectedReviewId}`,   reviewObj);
+            console.log("update review by id response:", response.data);
 
-        // } catch (e) {
-        // console.error(e);
-        // }
-
+            //update local review list item to indicate ack
+            this.fillReviewListItem(reviewObj);
+    
+            } catch (e) {
+            console.error(e);
+            }
     }
 
     componentDidMount() {
@@ -209,15 +214,12 @@ export default class Reviews extends Component {
             document.getElementById("update-result-area-"+reviewObj.id).innerHTML = "Reviews can only be updated by who created it." ;
     
             return false;
-    
         } 
         
         return true;
     }
 
     fillReviewForm(reviewObj) {
-
-        let reviewId = reviewObj.id;
 
         document.getElementById("prod-score").value   = reviewObj.product;
         document.getElementById("serv-score").value   = reviewObj.service;
@@ -232,17 +234,28 @@ export default class Reviews extends Component {
             overallScore: reviewObj.overall,
             comment:      reviewObj.comment
         } );
+    }
+
+    fillReviewListItem(reviewObj) {
+
+        let reviewId = this.state.selectedReviewId;
+
+        document.getElementById("prod-score-"+reviewId).innerHTML = `Product score: ${reviewObj.product}`;
+        document.getElementById("serv-score-"+reviewId).innerHTML = `Service score: ${reviewObj.service}`;
+        document.getElementById("clean-score-"+reviewId).innerHTML = `Cleanliness score: ${reviewObj.cleanliness}`;
+        document.getElementById("overall-score-"+reviewId).innerHTML = `Overall score: ${reviewObj.overall}`;
+        document.getElementById("comment-"+reviewId).innerHTML = reviewObj.comment;
 
     }
 
     handleUpdateReview(event) {
         
         let reviewId = event.target.id;
-        let reviewList = this.state.storeReviews;
+        this.state.selectedReviewId = reviewId;
 
-                    // if (! this.checkCustomerLogin(reviewId) ) {
-                    //     return  //customer is not logged in
-                    // }
+            if (! this.checkCustomerLogin(reviewId) ) {
+                return  //customer is not logged in
+            }
 
         let idx = this.state.storeReviews.findIndex( review => 
                                 review.id.toString() === reviewId.toString() );
@@ -250,18 +263,14 @@ export default class Reviews extends Component {
         if (idx >= 0) {
             let reviewObj = this.state.storeReviews[idx];
     
-                    // if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
+            if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
 
-                    //     return;  //customer does cannot update the review item
-                    // }
+                return;  //customer cannot update the review item
+            }
 
 
-console.log(reviewObj);
+            //prep the review form for customer to update. the review handler does actual update
             this.fillReviewForm(reviewObj);
-
-
-
-
         }
     }
     handleDeleteReview(event) {
@@ -281,7 +290,7 @@ console.log(reviewObj);
     
             if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
 
-                return;  //customer does cannot update the review item
+                return;  //customer cannot update the review item
             }
 
             //delete review from database
@@ -369,28 +378,43 @@ console.log(reviewObj);
 
         event.preventDefault();
 
-        //collect form field value in reviewObj
-        let reviewObj={};
-        for (let i=0; i<event.target.elements.length; i++) {
-            let elem=event.target.elements[i];
-            if (elem.type !== "select-one" && elem.type !== "textarea") {
-                continue;
-            }
+        let reviewId = this.state.selectedStoreId;
 
-            let keyValue= elem.type === "select-one" ? { [elem.name]: parseInt(elem.value) }   : 
-                                                       { [elem.name]: elem.value } ;
-            //merge key:value pair to wineObj
-            Object.assign(reviewObj, keyValue);
-
+        if (! this.checkCustomerLogin(reviewId) ) {
+            return  //customer is not logged in
         }
 
-        //add customer id and store id to reviewObj
-        let reviewInfo={ customer: this.state.customer.id,
-                         store: this.state.selectedStoreId};
+        let idx = this.state.storeReviews.findIndex( review => 
+                                review.id.toString() === reviewId.toString() );
 
-        Object.assign(reviewObj, reviewInfo);
+        if ( idx >= 0) {
+
+            //collect form field value in reviewObj
+            let reviewObj={};
+            for (let i=0; i<event.target.elements.length; i++) {
+                let elem=event.target.elements[i];
+                if (elem.type !== "select-one" && elem.type !== "textarea") {
+                    continue;
+                }
+    
+                let keyValue= elem.type === "select-one" ? { [elem.name]: parseInt(elem.value) } : 
+                                                           { [elem.name]: elem.value } ;
+                //merge key:value pair to wineObj
+                Object.assign(reviewObj, keyValue);
+    
+            }
+    
+            //add customer id and store id to reviewObj
+            let reviewInfo={ customer: parseInt(this.state.customer.id),
+                             store: parseInt(this.state.selectedStoreId)};
+    
+            Object.assign(reviewObj, reviewInfo);
+                
+            //update backend database
+            this.updateReviewById(reviewObj);
 
 
+        }
     }
 
     displayReviewForm() {
