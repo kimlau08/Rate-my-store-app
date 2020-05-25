@@ -10,6 +10,15 @@ import SelectList from './SelectList';
 import updateIcon from '../assets/update_icon.png';
 import deleteIcon from '../assets/delete_icon.png';
 
+const AddResultAreaId = "add-result-area";
+const UpdateResultAreaIdPrefix = "update-result-area-";    
+const defaultStoreId = 1;    //default to first store on list
+const defaultReviewId = -1;       
+const defaultReviewBoxStyle = {
+    border: '1px solid',
+    borderColor: 'orange'
+}
+
 function routeToReward() {
     return (
         <Router>
@@ -42,8 +51,10 @@ export default class Reviews extends Component {
             customers: [],
             storeReviews: [],
             storeCustomers: [],
-            selectedStoreId: 1,
-            selectedReviewId: 1,
+            selectedStoreId: defaultStoreId,
+            selectedReviewId: defaultReviewId,
+
+            reviewBoxColor: defaultReviewBoxStyle,
 
             productScore: 5,
             serviceScore: 5,
@@ -59,12 +70,16 @@ export default class Reviews extends Component {
         this.updateReviewById = this.updateReviewById.bind(this);
 
         this.handleSelect = this.handleSelect.bind(this);
+        this.clearSelectedReview = this.clearSelectedReview.bind(this);
+        this.resetAddReviewArea = this.resetAddReviewArea.bind(this);
         this.getStoreObj = this.getStoreObj.bind(this);
         this.getStoreReviews = this.getStoreReviews.bind(this);
         this.checkCustomerWriteAccess = this.checkCustomerWriteAccess.bind(this);
         this.displayReviewForm = this.displayReviewForm.bind(this);
         this.displayStoreReviews = this.displayStoreReviews.bind(this);
+        this.displayReview = this.displayReview.bind(this);
         this.fillReviewForm = this.fillReviewForm.bind(this);  //pre-load input form area with contents to be updated
+        this.clearReviewForm = this.clearReviewForm.bind(this);
         this.fillReviewListItem = this.fillReviewListItem.bind(this); //update the selected item in review list after backend is successfully updated.
 
         this.handleProductScoreChange = this.handleProductScoreChange.bind(this);
@@ -76,6 +91,8 @@ export default class Reviews extends Component {
         this.handleUpdateReview = this.handleUpdateReview.bind(this);
         this.handleDeleteReview = this.handleDeleteReview.bind(this);
         this.handleReview = this.handleReview.bind(this);
+
+        this.addNewReview = this.addNewReview.bind(this);
     }
     
     async getStores() {
@@ -95,7 +112,7 @@ export default class Reviews extends Component {
 
         try {
         const response=await axios.get(`http://localhost:8888/rms_api/v1/customers`);
-        console.log("get stores response:", response.data);
+        console.log("get customers response:", response.data);
         
         this.setState( {customers : response.data} );
 
@@ -129,13 +146,24 @@ export default class Reviews extends Component {
     }
 
     async updateReviewById (reviewObj) {
+
+        if (this.state.selectedReviewId < 0) {
+            console.log('ERROR::No selected review to update');
+            return;
+        }
         
         try {
             const response=await axios.put(`http://localhost:8888/rms_api/v1/reviews/${this.state.selectedReviewId}`,   reviewObj);
             console.log("update review by id response:", response.data);
 
-            //update local review list item to indicate ack
+            //Successful update. update local review list item to indicate ack
             this.fillReviewListItem(reviewObj);
+
+            //clear review form area
+            this.resetAddReviewArea();
+
+            //de-select review item
+            this.clearSelectedReview();
     
             } catch (e) {
             console.error(e);
@@ -147,7 +175,27 @@ export default class Reviews extends Component {
         this.getCustomers();
     }
 
-    handleSelect = (selectedValue) =>{
+    
+    showMsgInAddArea(Message) {
+        document.getElementById(AddResultAreaId).innerHTML = Message;
+    }
+    clearSelectedReview() {
+        //de-select review item by resetting to default
+        this.setState(  {selectedReviewId: defaultReviewId} );
+
+        //clear any review item update message in review form area.
+        this.showMsgInAddArea("");
+    }
+    resetAddReviewArea() {
+        
+        //clear any review item update message in review form area.
+        this.showMsgInAddArea("");
+
+        //clear add review area
+        this.clearReviewForm();
+    }
+
+    handleSelect(selectedValue) {
         this.setState({ selectedStoreId: selectedValue  });
 
         console.log(`selected store Id: ${selectedValue}`);
@@ -182,22 +230,22 @@ export default class Reviews extends Component {
             )           
     }
 
-    getStoreReviews() {
+    getStoreReviews(selectedValue) {
 
-        if (this.state.selectedStoreId === undefined) {
+        if (selectedValue === undefined) {
             return;
         }
 
-        this.getReviewsByStore(this.state.selectedStoreId);
+        this.getReviewsByStore(selectedValue);
     }
 
-    checkCustomerLogin(reviewId) {
+    checkCustomerLogin(checkResultAreaId) {
 
         let customer = this.state.customer;
 
         if (Object.keys(customer).length === 0 && customer.constructor === Object) {
             //customer is not set. tell customer to login first
-            document.getElementById("update-result-area-"+reviewId).innerHTML = "Please login first." ;
+            document.getElementById(checkResultAreaId).innerHTML = "Please login first." ;
 
             return false;
         }
@@ -205,13 +253,13 @@ export default class Reviews extends Component {
         return true;
     }
 
-    checkCustomerWriteAccess(reviewObj) {
+    checkCustomerWriteAccess(reviewObj, checkResultAreaId) {
 
         //write/delete access is given to reviews created by customer
         if ( this.state.customer.id !== reviewObj.customer ) {
 
             //tell customer that the review can only be updated by the person created it.
-            document.getElementById("update-result-area-"+reviewObj.id).innerHTML = "Reviews can only be updated by who created it." ;
+            document.getElementById(checkResultAreaId).innerHTML = "Reviews can only be updated by who created it." ;
     
             return false;
         } 
@@ -235,8 +283,29 @@ export default class Reviews extends Component {
             comment:      reviewObj.comment
         } );
     }
+    clearReviewForm() {
+        
+        document.getElementById("prod-score").value   = 5;
+        document.getElementById("serv-score").value   = 5;
+        document.getElementById("clean-score").value  = 5;
+        document.getElementById("general-score").value= 5;
+        document.getElementById("comment-area").value = "";
+
+        this.setState ( {
+            productScore: 5,
+            serviceScore: 5,
+            cleanScore:   5,
+            overallScore: 5,
+            comment:      ""
+        } );
+    }
 
     fillReviewListItem(reviewObj) {
+        
+        if (this.state.selectedReviewId < 0) {
+            console.log('ERROR::No selected review');
+            return;
+        }
 
         let reviewId = this.state.selectedReviewId;
 
@@ -251,34 +320,9 @@ export default class Reviews extends Component {
     handleUpdateReview(event) {
         
         let reviewId = event.target.id;
-        this.state.selectedReviewId = reviewId;
+        let updateResultAreaId = UpdateResultAreaIdPrefix+reviewId;
 
-            if (! this.checkCustomerLogin(reviewId) ) {
-                return  //customer is not logged in
-            }
-
-        let idx = this.state.storeReviews.findIndex( review => 
-                                review.id.toString() === reviewId.toString() );
-
-        if (idx >= 0) {
-            let reviewObj = this.state.storeReviews[idx];
-    
-            if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
-
-                return;  //customer cannot update the review item
-            }
-
-
-            //prep the review form for customer to update. the review handler does actual update
-            this.fillReviewForm(reviewObj);
-        }
-    }
-    handleDeleteReview(event) {
-        
-        let reviewId = event.target.id;
-        let reviewList = this.state.storeReviews;
-
-        if (! this.checkCustomerLogin(reviewId) ) {
+        if (! this.checkCustomerLogin(updateResultAreaId) ) {
             return  //customer is not logged in
         }
 
@@ -287,8 +331,39 @@ export default class Reviews extends Component {
 
         if (idx >= 0) {
             let reviewObj = this.state.storeReviews[idx];
+            let updateResultAreaId = UpdateResultAreaIdPrefix+reviewObj.id;
     
-            if  ( !this.checkCustomerWriteAccess(reviewObj) ) {
+            if  ( !this.checkCustomerWriteAccess(reviewObj, updateResultAreaId) ) {
+
+                return;  //customer cannot update the review item
+            }
+
+            //customer selected an valid review. 
+            this.state.selectedReviewId = reviewId;
+
+            //prep the review form for customer to update. the review handler does actual update
+            this.showMsgInAddArea("Updating review with the following content");
+            this.fillReviewForm(reviewObj);
+        }
+    }
+    handleDeleteReview(event) {
+        
+        let reviewId = event.target.id;
+        let reviewList = this.state.storeReviews;
+        let updateResultAreaId = UpdateResultAreaIdPrefix+reviewId
+
+        if (! this.checkCustomerLogin(updateResultAreaId) ) {
+            return  //customer is not logged in
+        }
+
+        let idx = this.state.storeReviews.findIndex( review => 
+                                review.id.toString() === reviewId.toString() );
+
+        if (idx >= 0) {
+            let reviewObj = this.state.storeReviews[idx];
+            let updateResultAreaId = UpdateResultAreaIdPrefix+reviewObj.id;
+    
+            if  ( !this.checkCustomerWriteAccess(reviewObj, updateResultAreaId) ) {
 
                 return;  //customer cannot update the review item
             }
@@ -314,16 +389,23 @@ export default class Reviews extends Component {
         let reviewId=review.id;
         let customerId = review.customer;
 
+        const highlightedReviewBoxStyle = {
+            border: '4px solid',
+            borderColor: 'blue'
+        }
+        let reviewBoxStyle = reviewId === this.state.selectedReviewId ?
+                                highlightedReviewBoxStyle : defaultReviewBoxStyle;
+
         return (
                 <div className="review-container" key={reviewId}>
                     
-                    <div className="review-box" >
+                    <div className="review-box" style={reviewBoxStyle} >
                         
                         <div className="button-row">
                             <img className="buttomImg" id={reviewId} src={updateIcon} onClick={this.handleUpdateReview} />
                             <img className="buttomImg" id={reviewId} src={deleteIcon} onClick={this.handleDeleteReview} />
 
-                            <p className="result-area" id={"update-result-area-"+reviewId}></p>
+                            <p className="result-area" id={UpdateResultAreaIdPrefix+reviewId}></p>
                         </div>
 
                         <div className="review-info-row">
@@ -351,7 +433,11 @@ export default class Reviews extends Component {
                 {this.state.storeReviews.map(review => this.displayReview(review))}
             </div>
         )
+    }
 
+    addNewReview(reviewObj) {
+
+        
     }
 
     handleProductScoreChange(event) {
@@ -378,41 +464,46 @@ export default class Reviews extends Component {
 
         event.preventDefault();
 
-        let reviewId = this.state.selectedStoreId;
-
-        if (! this.checkCustomerLogin(reviewId) ) {
+        if (! this.checkCustomerLogin(AddResultAreaId) ) {
             return  //customer is not logged in
         }
 
+        //collect form field value in reviewObj
+        let reviewObj={};
+        for (let i=0; i<event.target.elements.length; i++) {
+            let elem=event.target.elements[i];
+            if (elem.type !== "select-one" && elem.type !== "textarea") {
+                continue;
+            }
+
+            let keyValue= elem.type === "select-one" ? { [elem.name]: parseInt(elem.value) } : 
+                                                        { [elem.name]: elem.value } ;
+            //merge key:value pair to wineObj
+            Object.assign(reviewObj, keyValue);
+        }
+
+        //add customer id and store id to reviewObj
+        let reviewInfo={ customer: parseInt(this.state.customer.id),
+                            store: parseInt(this.state.selectedStoreId)};
+
+        Object.assign(reviewObj, reviewInfo);
+
+        if (this.state.selectedReviewId === defaultReviewId) {
+
+            //no review has been selected. Proceed to add review
+            this.addNewReview(event);
+            return;
+        }
+        
+        //a review list item has been selected. Proceed to update
+        let reviewId = this.state.selectedReviewId;
         let idx = this.state.storeReviews.findIndex( review => 
                                 review.id.toString() === reviewId.toString() );
 
         if ( idx >= 0) {
 
-            //collect form field value in reviewObj
-            let reviewObj={};
-            for (let i=0; i<event.target.elements.length; i++) {
-                let elem=event.target.elements[i];
-                if (elem.type !== "select-one" && elem.type !== "textarea") {
-                    continue;
-                }
-    
-                let keyValue= elem.type === "select-one" ? { [elem.name]: parseInt(elem.value) } : 
-                                                           { [elem.name]: elem.value } ;
-                //merge key:value pair to wineObj
-                Object.assign(reviewObj, keyValue);
-    
-            }
-    
-            //add customer id and store id to reviewObj
-            let reviewInfo={ customer: parseInt(this.state.customer.id),
-                             store: parseInt(this.state.selectedStoreId)};
-    
-            Object.assign(reviewObj, reviewInfo);
-
-            //update backend database
+            //update review in backend database
             this.updateReviewById(reviewObj);
-
 
         }
     }
@@ -420,6 +511,7 @@ export default class Reviews extends Component {
     displayReviewForm() {
         return (
             <form className="review-form" onSubmit={this.handleReview}>
+                <p id={AddResultAreaId}></p>
                 <div className="select-input-box">
                     <label className="product-score" >
                         Product score<br />
@@ -468,7 +560,12 @@ export default class Reviews extends Component {
                     <textarea className="textAreaInput" id="comment-area" name="comment" rows="3" cols="80"  placeholder="add comment here" onChange={this.handleCommentChange} /><br />
                 </label>
                 
-                <button type="submit" className="AddCommentButton">Add Comment</button>
+                <div className="form-button-row">
+    {/* <input type="submit" id="add-review-button" value="Add Review" className="review-button" onClick={AddReviewClicked} />
+    <input type="submit" id="update-review-button" value="Update Review" className="review-button" onClick={updateReviewClicked} /> */}
+                    <button type="submit" id="add-review-button" className="review-button">Add Review</button>
+    {/* <button type="submit"  id="update-review-button" className="review-button">Update Review</button> */}
+                </div>
             </form>
         )
     }
@@ -500,9 +597,11 @@ export default class Reviews extends Component {
                 <SelectList className="store-select-list" itemList={this.state.stores} handleSelectCallback={this.handleSelect} />
 
                 {this.displayStoreInfo(this.state.selectedStoreId)}
+
                 {this.displayReviewForm()}
 
                 {routeToReward()}
+
                 {this.displayStoreReviews()}
     
             </div>
