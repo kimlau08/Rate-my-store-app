@@ -8,7 +8,6 @@ import Login from './components/Login';
 import Reviews from './components/Reviews';
 import Slideshow from './components/Slideshow';
 
-
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -134,7 +133,6 @@ export default class App extends Component {
         {this.navBar()}
 
         <Slideshow />
-        {/* {this.Slideshow()} */}
 
       </div>
     );

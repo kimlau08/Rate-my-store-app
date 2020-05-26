@@ -149,12 +149,9 @@ export default class Login extends Component {
                     
                     <div className="login-button-row">
                         <button className="form-button" onClick={this.handleLogin} >Login</button>  
-    {/* <button className="form-button" onClick={this.handleCancel} >Cancel</button>   */}
                     </div>
                 </div>
             </div>
         )
-
     }
-    
 }

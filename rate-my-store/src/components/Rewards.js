@@ -1,13 +1,11 @@
 import React from 'react';
 
-
 function newCodeStr() {
 
     let code = ['0','0','0','0','0'];  //5 digit random code to be converted to code string
     let newCode = code.map(  c => { return ( Math.floor(Math.random()*10) ) }  );
     return newCode.join('');
 }
-
 
 function fetchBarCode() {
 

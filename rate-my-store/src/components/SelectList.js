@@ -14,10 +14,8 @@ export default class SelectList extends Component{
         this.props.handleSelectCallback(selectedValue);
     }
 
-
     render(){
         let itemArray = this.props.itemList;
-        let selectListId = this.props.selectListId;
 
         let optionList = itemArray.map((item) =>
                 <option  key={item.id}  value={item.id} >
