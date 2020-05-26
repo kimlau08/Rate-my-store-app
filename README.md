@@ -41,6 +41,7 @@
 ### Express.js server backend as image file server 
 ### Authentication using Postgres
 ### React-slideshow to graphically illustrate the business concept in home page
+### react-scroll-into-view to scroll to point of interest
 ### Axios for API calls
 #
 # CRUD operations
@@ -50,4 +51,5 @@
 ### Read a list of reviews for a selected store
 ### Update a review of given id
 ### Delete a review of given id
+#
 #

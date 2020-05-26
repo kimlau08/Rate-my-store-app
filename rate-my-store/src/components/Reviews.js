@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Route, Link, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import ScrollIntoView from 'react-scroll-into-view';
 
 import '../App.css';
 import Rewards from './Rewards';
@@ -450,7 +451,11 @@ export default class Reviews extends Component {
                     <div className="review-box" style={reviewBoxStyle} >
                         
                         <div className="button-row">
+                            
+                            <ScrollIntoView selector="#review-form">
                             <img className="buttomImg" id={reviewId} src={updateIcon} onClick={this.handleUpdateReview} />
+                            </ScrollIntoView>
+                            
                             <img className="buttomImg" id={reviewId} src={deleteIcon} onClick={this.handleDeleteReview} />
 
                             <p className="result-area" id={UpdateResultAreaIdPrefix+reviewId}></p>
@@ -563,7 +568,7 @@ export default class Reviews extends Component {
 
     displayReviewForm() {
         return (
-            <form className="review-form" onSubmit={this.handleReview}>
+            <form id="review-form" onSubmit={this.handleReview}>
                 <p id={AddResultAreaId}></p>
                 <div className="select-input-box">
                     <label className="product-score" >
