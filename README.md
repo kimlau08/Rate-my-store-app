@@ -8,15 +8,15 @@
 # 
 # Front-end Layout
 ### Home
-![wireframe](./screens/Home.png)
+![wireframe](./wireframe/Home.png)
 ### Login - authentication using Postgres backend
-![wireframe](./screens/Login.png)
+![wireframe](./wireframe/Login.png)
 ### Reviews - select a store to review 
-![wireframe](./screens/Reviews.png)
+![wireframe](./wireframe/Reviews.png)
 ### Review list - allowing update and delete on specific review 
-![wireframe](./screens/Review_list.png)
+![wireframe](./wireframe/Review_list.png)
 ### Barcode - for vouchers generated after creating a review
-![wireframe](./screens/Barcode.png)
+![wireframe](./wireframe/Barcode.png)
 # 
 # Components
 ### Stateful components
