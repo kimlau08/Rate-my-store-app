@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,14 +40,20 @@ public class ReviewsController {
 	  }
 
 
-	  //get all reviews by store
-	
-		@GetMapping("/reviews/{store}")
-		public List<Reviews> getReviewsByStore(@PathVariable(value = "store") long store) {
+   //get all reviews by store
 
-		    return this.reviewsRepository.findAllByStore(store);
-		}
+	@GetMapping("/reviews/{store}")
+	public List<Reviews> getReviewsByStore(@PathVariable(value = "store") long store) {
+
+	    return this.reviewsRepository.findAllByStore(store);
+	}
 		
+	//  save new review 
+		  
+	  @PostMapping("/reviews")
+	  public Reviews createReviews(@Valid @RequestBody Reviews reviews) {
+		  return reviewsRepository.save(reviews);
+	  }
 		
 
 	  //  Delete review 
@@ -68,14 +75,14 @@ public class ReviewsController {
 	  }
 	  
 
-	//  Update Employee
+	//  Update review
 	  
 	  @PutMapping("/reviews/{id}")
 	  public ResponseEntity<Reviews> updateReviews(@PathVariable(value = "id") Long reviewId,
 			    @Valid @RequestBody Reviews reviewsDetails)
 			    throws ResourceNotFoundException {
 		  		Reviews reviews = reviewsRepository.findById(reviewId)
-		    		  .orElseThrow(()-> new ResourceNotFoundException("Employee not found for this id :: " + reviewId));
+		    		  .orElseThrow(()-> new ResourceNotFoundException("Review not found for this id :: " + reviewId));
 		      
 		      
 		  		reviews.setCustomer(reviewsDetails.getCustomer()); 
