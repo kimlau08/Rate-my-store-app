@@ -31,10 +31,15 @@
 # 
 # API used: 
 ### 1) Barcode generation: https://quickchart.io/qr
-### 2) Backend database CRUD operations
+### 2) Backend database CRUD operationss
+#
+# Baseline Technologies
+### Frontend: Reactjs, AJAX
+### Backend: Spring Boot w/ Maven as build tool, MVC architecture, Postgres SQL database
 #
 # Technologies used additionally
 ### Express.js server backend as image file server 
+### Authentication using Postgres
 ### React-slideshow to graphically illustrate the business concept in home page
 ### Axios for API calls
 #
@@ -45,3 +50,4 @@
 ### Read a list of reviews for a selected store
 ### Update a review of given id
 ### Delete a review of given id
+#
