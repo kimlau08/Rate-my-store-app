@@ -153,6 +153,28 @@ export default class Reviews extends Component {
             }
     }
 
+
+    async createReview (reviewObj) {
+        
+        try {
+            const response=await axios.post(`http://localhost:8888/rms_api/v1/reviews`,   reviewObj);
+            console.log("update review by id response:", response.data);
+
+            //Successful update. 
+
+            //clear review form area
+            this.resetAddReviewArea();
+
+            //de-select review item
+            this.clearSelectedReview();
+
+            this.showMsgInAddArea("Successfully added new review. You've won a gift voucher!")
+    
+            } catch (e) {
+            console.error(e);
+            }
+    }
+
     componentDidMount() {
         this.getStores();
         this.getCustomers();
@@ -466,6 +488,9 @@ export default class Reviews extends Component {
 
         let reviewList = this.state.storeReviews;
         reviewObj = this.getNewId(reviewObj);
+
+        //create new review in backend database
+        this.createReview(reviewObj);
 
         //add new review to local list
         reviewList.push(reviewObj);

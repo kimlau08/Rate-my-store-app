@@ -26,11 +26,11 @@ CREATE TABLE customers (
 
 CREATE TABLE reviews (
     id INTEGER PRIMARY KEY,
-    customer INTEGER,
-    store INTEGER,
-    product INTEGER,
-    service INTEGER,
-    cleanliness INTEGER,
-    overall INTEGER,
-    comment VARCHAR(511)
+    customer INTEGER NOT NULL,
+    store INTEGER NOT NULL,
+    product INTEGER NOT NULL,
+    service INTEGER NOT NULL,
+    cleanliness INTEGER NOT NULL,
+    overall INTEGER NOT NULL,
+    comment VARCHAR(511) NOT NULL
 );
