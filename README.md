@@ -1,5 +1,11 @@
 # Rate-my-store-app
-
+#
+# Problem Statement
+### Provide a full stack application implementation for customer loyalty programs for stores, e.g. restuarants, shops, etc. Allow customers to rate product, serivce, cleanliness and overall scores of individual stores, to support building of customer experience and brands. 
+# 
+# Target users
+### Retail customers who can rate the stores they have visited and provides feedback. Stackholders who have vested interests in managing and improving their stores's brand and business.
+# 
 # Wireframe
 ### Home
 ![wireframe](./wireframe/Home.PNG)
@@ -12,27 +18,30 @@
 ### Barcode
 ![wireframe](./wireframe/Barcode.PNG)
 # 
-# Technologies used
-###   fullcalendar and plugins
-###   axios
-###   react router
-# Install commands
-###   npm install --save @fullcalendar/react @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-###   npm install --save axios 
+# Components
+### Stateful components
+#### App.js - Nav bar. Carousel.
+#### Login.js - Login and autheticate
+#### Reviews.js - Review list and API calls for CRUD operations
+#### SelectList.js - Generator of select list dynamically
 # 
-# API used
-###   Purpose: email validation 
-###   API End point: http://apilayer.net/api/check
+### Functional components
+#### Home.js - landing page with rendering shown App.js
+#### Rewards.js - API calls for voucher barcode generation
 # 
-# User engagement elements
-### Nav Bar 
-### Appointment form
-### Appointment - CRUD using calendar component.
-### Gifs:
-###   Breezes in Tulip field (in App.js)
+# API used: 
+### 1) Barcode generation: https://quickchart.io/qr
+### 2) Backend database CRUD operations
 #
-# CRUD operations on appointments using calendar
-### Create one or multiple appointments in one reservation
-### Display all appointments on current week and any other weeks.
-##  Update/Reschedule one or multiple appointments in one reservation
-##  Delete one or multiple appointments in one reservation
+# Technologies used additionally
+### Express.js server backend as image file server 
+### React-slideshow to graphically illustrate the business concept in home page
+### Axios for API calls
+#
+# CRUD operations
+### Create new review  
+### Read a customer for a given email for authentication
+### Read a list of stores to create the drop down select list
+### Read a list of reviews for a selected store
+### Update a review of given id
+### Delete a review of given id
