@@ -21,7 +21,6 @@ export default class Login extends Component {
         }
 
         this.handleLogin=this.handleLogin.bind(this);
-// this.handleCancel=this.handleCancel.bind(this);
         this.closeForm=this.closeForm.bind(this);
         this.handleNameChange=this.handleNameChange.bind(this);
         this.handleEmailChange=this.handleEmailChange.bind(this);
@@ -89,9 +88,6 @@ export default class Login extends Component {
 
         this.authenticateUser(this.state.email, this.state.password, this.authResultReady );
     }
-// handleCancel(event) {
-//     this.closeForm();  //redirect to home
-// }
 
     handleNameChange(event) {
         this.setState({name: event.target.value}); //update the value state when the field is changed
