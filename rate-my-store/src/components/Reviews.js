@@ -129,7 +129,7 @@ export default class Reviews extends Component {
 
     async updateReviewById (reviewObj) {
 
-        if (this.state.selectedReviewId < 0) {
+        if (this.state.selectedReviewId === defaultReviewId) {
             console.log('ERROR::No selected review to update');
             return;
         }
@@ -159,7 +159,11 @@ export default class Reviews extends Component {
             const response=await axios.post(`http://localhost:8888/rms_api/v1/reviews`,   reviewObj);
             console.log("update review by id response:", response.data);
 
-            //Successful update. 
+            //Successful update. The response has the new record with new id. 
+            //Add it to local list            
+            let reviewList = this.state.storeReviews;
+            reviewList.push(response.data);
+            this.setState(  {storeReviews: reviewList } );
 
             //clear review form area
             this.resetAddReviewArea();
@@ -346,7 +350,7 @@ export default class Reviews extends Component {
 
     fillReviewListItem(reviewObj) {
         
-        if (this.state.selectedReviewId < 0) {
+        if (this.state.selectedReviewId === defaultReviewId) {
             console.log('ERROR::No selected review');
             return;
         }
@@ -482,14 +486,8 @@ export default class Reviews extends Component {
 
     addNewReview(reviewObj) {
 
-        let reviewList = this.state.storeReviews;
-
-        //create new review in backend database
+        //create new review in backend database. The response will have a new record. It will be used to update the local list
         this.createReview(reviewObj);
-
-        //add new review to local list
-        reviewList.push(reviewObj);
-        this.setState(  {storeReviews: reviewList } );
 
         //enable reward after adding new review
         this.setState( { rewardEnabled : true});
