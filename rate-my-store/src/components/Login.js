@@ -119,6 +119,7 @@ export default class Login extends Component {
     
         if (this.props.location.swapDisplayCallback !== undefined) { 
             this.props.location.swapDisplayCallback(toContainerId, this.props);
+
         } else {
             return (<div>
                 

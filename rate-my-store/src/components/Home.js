@@ -9,8 +9,6 @@ export default function Home(props) {
     return (  //display already rendered in App.js
         <div>
 
-            <h1>Welcome to the Home page</h1>
-
         </div>
     )
 }
