@@ -34,7 +34,7 @@
 ### 2) Backend database CRUD operationss
 #
 # Baseline Technologies
-### Frontend: Reactjs, AJAX
+### Frontend: Reactjs, React Router, Axios/AJAX
 ### Backend: Spring Boot w/ Maven as build tool, MVC architecture, Postgres SQL database
 #
 # Technologies used additionally
