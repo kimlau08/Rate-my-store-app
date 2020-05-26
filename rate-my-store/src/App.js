@@ -20,7 +20,6 @@ export default class App extends Component {
 
     }
 
-    
     this.getCustomer=this.getCustomer.bind(this);
     this.setCustomer=this.setCustomer.bind(this);
 
@@ -78,11 +77,6 @@ export default class App extends Component {
         }
     }
   }
-
-  Slideshow = () => {
-    return 
-}
-
 
   navBar() {
     return (

@@ -242,6 +242,9 @@ export default class Reviews extends Component {
             this.setState( { rewardEnabled : false});
         }
 
+        //clear status message in Add area
+        this.showMsgInAddArea("");
+
         this.setState({ selectedStoreId: selectedValue  });
 
         console.log(`selected store Id: ${selectedValue}`);
@@ -455,7 +458,7 @@ export default class Reviews extends Component {
                             <ScrollIntoView selector="#review-form">
                             <img className="buttomImg" id={reviewId} src={updateIcon} onClick={this.handleUpdateReview} />
                             </ScrollIntoView>
-                            
+
                             <img className="buttomImg" id={reviewId} src={deleteIcon} onClick={this.handleDeleteReview} />
 
                             <p className="result-area" id={UpdateResultAreaIdPrefix+reviewId}></p>
