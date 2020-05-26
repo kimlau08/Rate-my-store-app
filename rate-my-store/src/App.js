@@ -56,6 +56,7 @@ export default class App extends Component {
   }
   setCustomer(customerObj) {
     this.state.customer = customerObj;
+    document.getElementById("user-name").innerHTML = customerObj.name;
   }
 
   setContainerOnDisplay(container) {   //Do not cause render
@@ -151,6 +152,7 @@ export default class App extends Component {
                     }}>Reviews</Link>
               </li>
           </ul>
+          <p id="user-name"></p>
         </nav>
         <Switch>
           <Route exact path="/Home" component={Home} />

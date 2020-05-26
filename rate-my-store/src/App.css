@@ -36,10 +36,19 @@ h1 {
 
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
 
     font-weight: bold;
     font-style: italic;
+
+border: solid 1px pink;
+  }
+  #user-name {
+    width: 100px;
+    height: 20px;
+
+    font-weight: bold;
+border: solid 1px plum;
   }
 
   .slide-container {
