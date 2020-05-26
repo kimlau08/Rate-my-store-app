@@ -18,7 +18,6 @@ const defaultReviewBoxStyle = {
     border: '1px solid',
     borderColor: 'orange'
 }
-let uniqueReviewId = 100;
 
 export default class Reviews extends Component { 
     constructor(props) {
@@ -327,6 +326,7 @@ export default class Reviews extends Component {
             comment:      reviewObj.comment
         } );
     }
+
     clearReviewForm() {
         
         document.getElementById("prod-score").value   = 5;
@@ -390,6 +390,7 @@ export default class Reviews extends Component {
             this.fillReviewForm(reviewObj);
         }
     }
+
     handleDeleteReview(event) {
         
         let reviewId = event.target.id;
@@ -479,15 +480,9 @@ export default class Reviews extends Component {
         )
     }
 
-    getNewId(reviewObj) {
-        let keyValue = { id: ++uniqueReviewId } ;
-        Object.assign(reviewObj, keyValue);
-        return reviewObj;
-    }
     addNewReview(reviewObj) {
 
         let reviewList = this.state.storeReviews;
-        reviewObj = this.getNewId(reviewObj);
 
         //create new review in backend database
         this.createReview(reviewObj);
