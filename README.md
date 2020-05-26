@@ -1,22 +1,22 @@
 # Rate-my-store-app
 # 
 # Problem Statement
-### Provide full stack application to implement customer loyalty for stores, e.g. restuarants, shops, etc. Allow customers to rate product, serivce, cleanliness and overall scores of individual stores, to support building of customer experience and brands. 
+### Provide a full stack application implementation for customer loyalty programs for stores, e.g. restuarants, shops, etc. Allow customers to rate product, serivce, cleanliness and overall scores of individual stores, to support building of customer experience and brands. 
 # 
 # Target users
 ### Retail customers who can rate the stores they have visited and provides feedback. Stackholders who have vested interests in managing and improving their stores's brand and business.
 # 
 # Front-end Layout
 ### Home
-![screens](./screens/Home.png)
+![wireframe](./screens/Home.png)
 ### Login - authentication using Postgres backend
-![screens](./screens/Login.png)
+![wireframe](./screens/Login.png)
 ### Reviews - select a store to review 
-![screens](./screens/Reviews.png)
+![wireframe](./screens/Reviews.png)
 ### Review list - allowing update and delete on specific review 
-![screens](./screens/Review_list.png)
+![wireframe](./screens/Review_list.png)
 ### Barcode - for vouchers generated after creating a review
-![screens](./screens/Barcode.png)
+![wireframe](./screens/Barcode.png)
 # 
 # Components
 ### Stateful components
